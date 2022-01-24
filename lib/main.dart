@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app_with_graphql/providers/add_task_provider.dart';
+import 'package:todo_app_with_graphql/providers/delete_task_provider.dart';
+import 'package:todo_app_with_graphql/providers/get_task_provider.dart';
 
 import 'home_page.dart';
 
-void main() {
+void main() async {
+  await initHiveForFlutter();
   runApp(const MyApp());
 }
 
@@ -11,13 +17,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Todo App With GraphQl',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AddTaskProvider()),
+        ChangeNotifierProvider(create: (_) => GetTaskProvider()),
+        ChangeNotifierProvider(create: (_) => DeleteTaskProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Todo App With GraphQl',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const HomePage(),
       ),
-      home: const HomePage(),
     );
   }
 }
