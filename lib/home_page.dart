@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app_with_graphql/providers/add_task_provider.dart';
 import 'package:todo_app_with_graphql/providers/delete_task_provider.dart';
 import 'package:todo_app_with_graphql/providers/get_task_provider.dart';
 
@@ -25,8 +26,13 @@ class _HomePageState extends State<HomePage> {
         if (isFetched == false) {
           ///Fetch the data
           task.getTask(true);
-
           Future.delayed(const Duration(seconds: 3), () => isFetched = true);
+        } else if (Provider.of<DeleteTaskProvider>(context).getResponse ==
+            'Task was successfully deleted') {
+          Provider.of<GetTaskProvider>(context).getTask(false);
+        } else if (Provider.of<AddTaskProvider>(context).getResponse ==
+            'Task was successfully added') {
+          Provider.of<GetTaskProvider>(context).getTask(false);
         }
         return RefreshIndicator(
           onRefresh: () {

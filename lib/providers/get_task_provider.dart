@@ -12,9 +12,14 @@ class GetTaskProvider extends ChangeNotifier {
   bool get getStatus => _status;
   String get getResponse => _response;
 
+  String? setResponse(String value) {
+    return _response = value;
+  }
+
   EndPoint _point = EndPoint();
 
   void getTask(bool isLocal) async {
+    print('get task');
     ValueNotifier<GraphQLClient> _client = _point.getClient();
 
     QueryResult result = await _client.value.query(QueryOptions(
@@ -22,7 +27,6 @@ class GetTaskProvider extends ChangeNotifier {
       fetchPolicy: isLocal == true ? null : FetchPolicy.networkOnly,
     ));
     if (result.hasException) {
-      print(result.exception);
       _status = false;
       if (result.exception!.graphqlErrors.isEmpty) {
         _response = 'Please check your internet';
@@ -31,10 +35,9 @@ class GetTaskProvider extends ChangeNotifier {
       }
       notifyListeners();
     } else {
-      print(result.data);
       _status = false;
       _list = result.data;
-      _response = 'Task was successfully added';
+      print(_list);
       notifyListeners();
     }
   }
@@ -42,7 +45,7 @@ class GetTaskProvider extends ChangeNotifier {
   dynamic getResponseData() {
     if (_list.isNotEmpty) {
       final data = _list;
-      print(data['getTodos']);
+
       return data['getTodos'] ?? {};
     } else {
       return {};

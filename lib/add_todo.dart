@@ -17,34 +17,33 @@ class _AddTodoState extends State<AddTodo> {
       appBar: AppBar(
         title: const Text('Add New Todo'),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(20),
-                    child: const Text('Add your first todo'),
-                  ),
-                  TextFormField(
-                    controller: _task,
-                    decoration: const InputDecoration(
-                      labelText: 'Todo Task',
+      body: Consumer<AddTaskProvider>(
+        builder: (BuildContext context, task, Widget? child) {
+          WidgetsBinding.instance!.addPostFrameCallback((_) {
+            if (task.getResponse != '') {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(task.getResponse)));
+
+              task.clear();
+            }
+          });
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(children: [
+                    Container(
+                      margin: const EdgeInsets.all(20),
+                      child: const Text('Add your first todo'),
                     ),
-                  ),
-                  Consumer<AddTaskProvider>(builder: (context, task, child) {
-                    WidgetsBinding.instance!.addPostFrameCallback((_) {
-                      if (task.getResponse != '') {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(task.getResponse)));
-
-                        task.clear();
-                      }
-                    });
-
-                    return GestureDetector(
+                    TextFormField(
+                      controller: _task,
+                      decoration: const InputDecoration(
+                        labelText: 'Todo Task',
+                      ),
+                    ),
+                    GestureDetector(
                       onTap: task.getStatus == true
                           ? null
                           : () {
@@ -69,13 +68,13 @@ class _AddTodoState extends State<AddTodo> {
                           ),
                         ),
                       ),
-                    );
-                  })
-                ],
-              ),
-            ),
-          )
-        ],
+                    )
+                  ]),
+                ),
+              )
+            ],
+          );
+        },
       ),
     );
   }

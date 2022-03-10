@@ -16,6 +16,7 @@ class AddTaskProvider extends ChangeNotifier {
     String? task,
     String? status,
   }) async {
+    print('add task');
     _status = true;
     _response = 'Please wait...';
     notifyListeners();
@@ -28,7 +29,6 @@ class AddTaskProvider extends ChangeNotifier {
       'status': status,
     }));
     if (result.hasException) {
-      print(result.exception);
       _status = false;
       if (result.exception!.graphqlErrors.isEmpty) {
         _response = 'Please check your internet';
@@ -37,7 +37,6 @@ class AddTaskProvider extends ChangeNotifier {
       }
       notifyListeners();
     } else {
-      print(result.data);
       _status = false;
       _response = 'Task was successfully added';
       notifyListeners();

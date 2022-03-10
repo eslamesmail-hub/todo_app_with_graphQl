@@ -15,6 +15,7 @@ class DeleteTaskProvider extends ChangeNotifier {
   void deleteTask({
     int? todoId,
   }) async {
+    print('delete task');
     _status = true;
     _response = 'Please wait...';
     notifyListeners();
@@ -26,7 +27,6 @@ class DeleteTaskProvider extends ChangeNotifier {
       'todoId': todoId,
     }));
     if (result.hasException) {
-      print(result.exception);
       _status = false;
       if (result.exception!.graphqlErrors.isEmpty) {
         _response = 'Please check your internet';
@@ -35,7 +35,6 @@ class DeleteTaskProvider extends ChangeNotifier {
       }
       notifyListeners();
     } else {
-      print(result.data);
       _status = false;
       _response = 'Task was successfully deleted';
       notifyListeners();
